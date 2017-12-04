@@ -1,4 +1,4 @@
-inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\02\\input2.txt"
+inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\02\\input02.txt"
 with open(inputfile) as f:
     rows = f.readlines()
 checksum = 0

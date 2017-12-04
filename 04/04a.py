@@ -1,4 +1,4 @@
-inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\04\\input4.txt"
+inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\04\\input04.txt"
 with open(inputfile) as f:
     phrases = f.readlines()
 total = len(phrases)
@@ -17,6 +17,6 @@ for phrase in phrases:
     else:
         invalid += 1
     
-print (valid)
-print (invalid)
-print (total)
+print ("{0} valid".format(valid))
+print ("{0} invalid".format(invalid))
+print ("{0} total".format(total))
