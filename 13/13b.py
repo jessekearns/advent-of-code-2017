@@ -15,7 +15,7 @@ while True:
         if step in firewalls:
             scannerMod = ((firewalls[step] * 2) - 2)
             if (step + delay) % scannerMod == 0:
-                print ("Delaying {0} steps, I would be caught in layer {1}".format(delay, step))
+                # print ("Delaying {0} steps, I would be caught in layer {1}".format(delay, step))
                 caught = True
                 break
     if caught:
