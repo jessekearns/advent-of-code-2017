@@ -7,6 +7,15 @@ def swap(arr, first, second):
     arr[first] = arr[second]
     arr[second] = temp
     return arr
+def partner(arr, first, second):
+    firstIndex = 0
+    secondIndex = 0
+    for i in range(16):
+        if (first == arr[i]):
+            firstIndex = i
+        if (second == arr[i]):
+            secondIndex = i
+    return swap(arr, firstIndex, secondIndex)
 
 inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\16\\input16.txt"
 with open(inputfile) as f:
@@ -27,17 +36,20 @@ while not loopFound and iter < totalIterations:
             first = int(move[1:].split('/')[0])
             second = int(move[1:].split('/')[1])
             arr = swap(arr, first, second)
-        # even number of partner swaps = same place after a billion so ignore
+        elif move[0] == 'p':
+            first = move[1:].split('/')[0]
+            second = move[1:].split('/')[1]
+            arr = partner(arr, first, second)
 
     thisArrangement = ''
     for p in arr: 
         thisArrangement += p
 
     if thisArrangement in arrangements:
-        print("cycle found: {0} to {1}".format(iter, arrangements[thisArrangement]))
+        print("cycle found: {0} to {1}".format(arrangements[thisArrangement], iter))
         loopLength =  iter - arrangements[thisArrangement]
-        finalIndex = (totalIterations % loopLength)
-        print(finalIndex)
+        finalIndex = (totalIterations % loopLength) - 1 - arrangements[thisArrangement]
+        print("One billion is equivalent to index: {0}".format(finalIndex))
         loopFound = True
         break
     else:
@@ -45,24 +57,7 @@ while not loopFound and iter < totalIterations:
 
     iter += 1
 
-# Get the change after one iteration
-# positionList = []
-# for i in range(16):
-#     for j in range(16):
-#         if arr[j] == originalArr[i]:
-#             offset = j - i
-#             if(offset < 0): offset += 16
-#             positionList.append(offset)
 
-# # Multiply the offsets by a billion and apply
-# for i in range(16):
-#     pos = positionList[i]
-#     newOffset = pos * 1000000000
-#     newPos = (newOffset + i) % 16
-#     arr[newPos] = originalArr[i]
-
-
-print(arrangements)
 for key in arrangements:
     if(arrangements[key] == finalIndex):
         print(key)
