@@ -30,7 +30,7 @@ for iteration in range(totalBursts):
         direction += 0
     elif nodeState == 2:
         # infected - right
-        direction += 0
+        direction += 3
     elif nodeState == 3:
         # flagged - revers
         direction += 2
@@ -54,5 +54,7 @@ for iteration in range(totalBursts):
     # down
     elif (direction == 3):
         iA += 1
+
+    #print("{0} infections after {1} bursts".format(infections, iteration))
 
 print("{0} infections after {1} bursts".format(infections, totalBursts))
