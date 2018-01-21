@@ -21,15 +21,19 @@ def GetStrengthOfBridge(bridge):
 def GetNextComponentCandidates(current, matrix):
     candidates = []
     row = matrix[current]
-    for col in range(len(row)):
+    # Search high to low - greedy algorithm
+    for col in reversed(range(len(row))):
         availableNumber = row[col]
         if availableNumber > 0:
             candidates.append((current, col))
     return candidates
 
-def GetStrongestBridge(current, matrix):
+def GetStrongestBridge(current, matrix, bridgeSoFar, strengthSoFar):
     candidates = GetNextComponentCandidates(current, matrix)
     if len(candidates) == 0:
+        if (strengthSoFar > 1864): # Ran it, plugged in the highest I saw, repeat
+            print(bridgeSoFar)
+            print("Strength: {0}, length: {1}".format(strengthSoFar, len(bridgeSoFar)))
         return []
 
     bestStrength = 0
@@ -37,10 +41,12 @@ def GetStrongestBridge(current, matrix):
 
     for candidate in candidates:
         nextConnection = candidate[1]
-        newMatrix = matrix
-        newMatrix[current][nextConnection] -= 1
-        newMatrix[nextConnection][current] -= 1
-        candidateBridge = [(current, nextConnection)] + GetStrongestBridge(nextConnection, newMatrix)
+        candidateStrength = GetStrengthOfBridge([(current, nextConnection)])
+        matrix[current][nextConnection] -= 1
+        matrix[nextConnection][current] -= 1
+        candidateBridge = GetStrongestBridge(nextConnection, matrix, bridgeSoFar + [(current, nextConnection)], strengthSoFar + candidateStrength)
+        matrix[current][nextConnection] += 1
+        matrix[nextConnection][current] += 1
         candidateStrength = GetStrengthOfBridge(candidateBridge)
         if (candidateStrength > bestStrength):
             bestStrength = candidateStrength
@@ -64,7 +70,7 @@ for line in lines:
     components.append(pair)
 
 componentMatrix = GetMatrixFromList(components)
-bridge = GetStrongestBridge(0, componentMatrix)
+bridge = GetStrongestBridge(0, componentMatrix, [], 0)
 strength = GetStrengthOfBridge(bridge)
 
 print(bridge)
