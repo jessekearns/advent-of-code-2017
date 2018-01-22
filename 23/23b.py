@@ -1,89 +1,70 @@
-import collections
+import math
 
-def set(x, y, registers):
-    registers[x] = y
+# Converting the whole thing to Python and then working through to optimize
 
-def decrease(x, y, registers):
-    registers[x] -= y
+# Thanks Stack Overflow
+def is_prime(n):
+    if n % 2 == 0 and n > 2: 
+        return False
+    return all(n % i for i in range(3, int(math.sqrt(n)) + 1, 2))
 
-def multiply(x, y, registers):
-    registers[x] *= y
-
-def jump(x, y, registers, position):
-    xVal = 0
-    try:
-        xVal = int(x)
-    except:
-        xVal = registers[x]
-    if xVal != 0:
-        #print("Jump {0} + {1}".format(position, y))
-        return ((position + y) - 1) # Quick and dirty way to avoid double increment when we add 1
-    else:
-        return position
-
-def parseSecondArg(y, registers):
-    try:
-        yVal = int(y)
-    except:
-        yVal = registers[y]
-    return yVal
-
-inputfile = "C:\\Users\\jkearns\\Documents\\GitHub\\advent-of-code-2017\\23\\input23.txt"
-with open(inputfile) as f:
-    lines = f.readlines()
-
-registers = collections.defaultdict(int)
-registers['a'] = 1
-
-position = 0
-mulCount = 0
-
-while (position >= 0 and position < len(lines) and mulCount <= 6241):
-    #print("{0}: {1}".format(position+1, lines[position].replace('\n', '')))
-    args = lines[position].replace('\n', '').split(' ')
-    command = args[0]
-    x = args[1]
-    try:
-        secondArg = args[2]
-        y = parseSecondArg(secondArg, registers)
-    except:
-        y = 0
-
-    if command == 'set':
-        set(x, y, registers)
-    elif command == 'sub':
-        # Pretty sure this is wrong Prevent cycle 9-32
-        # if (position == 30):
-        #     decrease(x, registers['g'], registers)
-        # else:
-        decrease(x, y, registers)
-    elif command == 'mul':
-        multiply(x, y, registers)
-        mulCount += 1
-    elif command == 'jnz':
-        # Prevent cycle 12-20
-        if (position == 19):
-            #print("Short circuiting command 20 by adding g to e and setting g to 0")
-            gVal = registers['g']
-            registers['e'] -= gVal
-            registers['g'] = 0
-        # Prevent Cycle 11-24
-        if (position == 23):
-            #print("Short circuiting command 24 by adding g to d and setting g to 0")
-            gVal = registers['g']
-            registers['d'] -= gVal
-            registers['g'] = 0
-        position = jump(x, y, registers, position)
-    else:
-        print("{0} command not recognized".format(command))
+def outestLoop(b, c):
+    candidates = []
+    candidates.append(b)
+    while (b < c):
+        b += 17
+        if (b > c):
+            print("Bogus input!")
+        else:
+            candidates.append(b)
+        
     
-    position += 1
+    h = 0
+    for candidate in candidates:
+        if (not is_prime(candidate)):
+            h += 1
 
-    # print("{0}: {1}".format("Pos", position))
-    # for r in registers:
-    #     print("{0}: {1}".format(r, registers[r]))
-    # print('')
+    return h
+              
 
-print("\nFinal Status:")
-for r in registers:
-    print("{0}: {1}".format(r, registers[r]))
+def outerLoop(b, d, f):
+    # set d and e to b
+    # set g to 0
+    # set f to 0 if b is divisible by any number 2 - b-1
+    # --> if b is not prime set f to 0
+    # Inner loop
+    if (is_prime(b)):
+        f = 0
+
+    return(b, b, f, 0)
+
+def innerLoop(b, d, e):
+    # Loop - Set e to b, g to 0, and f to zero iff d divides b evenly
+    # increment e until it matches b
+    # g winds up zero
+    # f set to zero one time if d*e == b, d and f never changed otherwise
+    # That means f should be set to 0 if d divides b cleanly (since e goes from 1 to b)
+
+    shouldResetF = False
+    if (b % d == 0):
+        shouldResetF = True
+
+    return (b, shouldResetF, 0)
+
+debug = False
+input1 = 81
+input2 = 81
+output = 0
+
+if (not debug):
+    input1 *= 100
+    input1 += 100000
+    input2 = input1
+    input2 += 17000
+
+
+output = outestLoop(input1, input2)
+
+print("b: {0}".format(input1))
+print("c: {0}".format(input2))
+print("h: {0}".format(output))
